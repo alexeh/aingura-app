@@ -9,5 +9,5 @@ export const imgurConf = {
 };
 
 export const AINGURA_API = {
-  API_URL: "http://192.168.0.35:4200",
+  API_URL: "http://192.168.1.132:4200",
 };

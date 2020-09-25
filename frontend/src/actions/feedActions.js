@@ -9,7 +9,7 @@ export async function loadFeed() {
   const headers = { headers: { Authorization: `Bearer ${token}` } };
 
   return axios
-    .post("http://192.168.0.35:4200/api/updatefeed", { key: "value" }, headers)
+    .post("http://192.168.1.132:4200/api/updatefeed", { key: "value" }, headers)
     .then((ainguraData) => {
       if (ainguraData) {
         dispatcher.dispatch({
@@ -29,7 +29,7 @@ export async function loadAinguraById(id) {
   const headers = { headers: { Authorization: `Bearer ${token}` } };
   console.log(token);
   return axios
-    .get(`http://192.168.0.35:4200/api/${id}`, { key: "value" }, headers)
+    .get(`http://192.168.1.132:4200/api/${id}`, { key: "value" }, headers)
     .then((ainguraData) => {
       if (ainguraData) {
         dispatcher.dispatch({
@@ -45,19 +45,22 @@ export async function loadAinguraById(id) {
 
 export async function createAingura(ainguraParams) {
   return axios
-    .post("http://192.168.0.35:4200/api/create", ainguraParams)
+    .post("http://192.168.1.132:4200/api/create", ainguraParams)
     .catch((err) => {
       throw err;
     });
 }
 
 export function validateGeoLocation(geoLocParams) {
-  return axios.post("http://192.168.0.35:4200/api/geovalidation", geoLocParams);
+  return axios.post(
+    "http://192.168.1.132:4200/api/geovalidation",
+    geoLocParams
+  );
 }
 
 export function validateReachAingura(ainguraData) {
   return axios
-    .post("http://192.168.0.35:4200/api/reachaingura", ainguraData)
+    .post("http://192.168.1.132:4200/api/reachaingura", ainguraData)
     .then((message) => {
       dispatcher.dispatch({
         type: actionTypes.REACH_AINGURA,
