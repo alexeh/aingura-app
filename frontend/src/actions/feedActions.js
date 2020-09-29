@@ -10,6 +10,7 @@ const headers = { headers: { Authorization: `Bearer ${token}` } };
 const payload = { key: "value" };
 
 export async function loadFeed() {
+  console.log(AINGURA_API.API_URL + AINGURA_API.FEED_ENDPOINT);
   return axios
     .post(AINGURA_API.API_URL + AINGURA_API.FEED_ENDPOINT, payload, headers)
     .then((ainguraData) => {
@@ -57,6 +58,7 @@ export function validateGeoLocation(geoLocParams) {
 }
 
 export function validateReachAingura(ainguraData) {
+  console.log(AINGURA_API.API_URL + AINGURA_API.REACH_ENDPOINT);
   return axios
     .post(AINGURA_API.API_URL + AINGURA_API.REACH_ENDPOINT, ainguraData)
     .then((message) => {

@@ -11,7 +11,7 @@ export const imgurConf = {
 export const AINGURA_API = {
   API_URL: "http://192.168.1.132:4200",
   FEED_ENDPOINT: "/api/updatefeed",
-  CREATE_ENDPOINT: "api/create",
-  GEOVALIDATION_ENDPOINT: "api/geovalidation",
-  REACH_ENDPOINT: "api/reachaingura",
+  CREATE_ENDPOINT: "/api/create",
+  GEOVALIDATION_ENDPOINT: "/api/geovalidation",
+  REACH_ENDPOINT: "/api/reachaingura",
 };
