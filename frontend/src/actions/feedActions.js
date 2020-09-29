@@ -2,14 +2,16 @@ import dispatcher from "../../Dispatcher";
 import actionTypes from "../actions/actionTypes";
 import axios from "axios";
 import authStore from "../stores/authStore";
+import { AINGURA_API } from "../enviromentConf";
+
+const token = authStore.getToken();
+
+const headers = { headers: { Authorization: `Bearer ${token}` } };
+const payload = { key: "value" };
 
 export async function loadFeed() {
-  const token = authStore.getToken();
-
-  const headers = { headers: { Authorization: `Bearer ${token}` } };
-
   return axios
-    .post("http://192.168.1.132:4200/api/updatefeed", { key: "value" }, headers)
+    .post(AINGURA_API.API_URL + AINGURA_API.FEED_ENDPOINT, payload, headers)
     .then((ainguraData) => {
       if (ainguraData) {
         dispatcher.dispatch({
@@ -24,12 +26,8 @@ export async function loadFeed() {
 }
 
 export async function loadAinguraById(id) {
-  const token = authStore.getToken();
-
-  const headers = { headers: { Authorization: `Bearer ${token}` } };
-  console.log(token);
   return axios
-    .get(`http://192.168.1.132:4200/api/${id}`, { key: "value" }, headers)
+    .get(`http://192.168.1.132:4200/api/${id}`, payload, headers)
     .then((ainguraData) => {
       if (ainguraData) {
         dispatcher.dispatch({
@@ -45,7 +43,7 @@ export async function loadAinguraById(id) {
 
 export async function createAingura(ainguraParams) {
   return axios
-    .post("http://192.168.1.132:4200/api/create", ainguraParams)
+    .post(AINGURA_API.API_URL + AINGURA_API.CREATE_ENDPOINT, ainguraParams)
     .catch((err) => {
       throw err;
     });
@@ -53,14 +51,14 @@ export async function createAingura(ainguraParams) {
 
 export function validateGeoLocation(geoLocParams) {
   return axios.post(
-    "http://192.168.1.132:4200/api/geovalidation",
+    AINGURA_API.API_URL + AINGURA_API.GEOVALIDATION_ENDPOINT,
     geoLocParams
   );
 }
 
 export function validateReachAingura(ainguraData) {
   return axios
-    .post("http://192.168.1.132:4200/api/reachaingura", ainguraData)
+    .post(AINGURA_API.API_URL + AINGURA_API.REACH_ENDPOINT, ainguraData)
     .then((message) => {
       dispatcher.dispatch({
         type: actionTypes.REACH_AINGURA,
