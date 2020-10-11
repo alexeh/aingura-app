@@ -1,6 +1,7 @@
 import { imgurConf } from "../enviromentConf";
 import axios from "axios";
 import { ToastAndroid } from "react-native";
+import S3 from "aws-sdk";
 
 export function validatePasswordAtRegister(password, confirmPassword) {
   if (password === confirmPassword) {
