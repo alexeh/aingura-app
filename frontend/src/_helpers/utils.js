@@ -1,7 +1,8 @@
 import { imgurConf } from "../enviromentConf";
 import axios from "axios";
 import { ToastAndroid } from "react-native";
-import S3 from "aws-sdk";
+import S3 from "aws-sdk/clients/s3";
+import { Credentials } from "aws-sdk";
 
 export function validatePasswordAtRegister(password, confirmPassword) {
   if (password === confirmPassword) {
@@ -61,6 +62,31 @@ export function userAlreadyBeenInAingura(visitedArray, username) {
 
 export function showToast(messageToShow) {
   return ToastAndroid.show(messageToShow, ToastAndroid.SHORT);
+}
+
+export async function uploadImageOnS3(file) {
+  const s3bucket = new S3({
+    accessKeyId: "AKIAWLI27SCGA4RTS7VJ",
+    secretAccessKey: "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",
+    Bucket: "aingura-imgs",
+    signatureVersion: "v4",
+  });
+  s3bucket.createBucket(() => {
+    const params = {
+      Bucket: "aingura-imgs",
+      Key: "test",
+      Body: file,
+      ContentDisposition: contentDeposition,
+      ContentType: contentType,
+    };
+    s3bucket.upload(params, (err, data) => {
+      if (err) {
+        console.log("error in callback");
+      }
+      console.log("success");
+      console.log("Respomse URL : " + data.Location);
+    });
+  });
 }
 
 //export function constructObjectToBackend(ainguraName, ainguraDesc, ainguraApproxLocation, geolocation, userInfo, )
