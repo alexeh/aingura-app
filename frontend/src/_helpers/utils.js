@@ -33,14 +33,16 @@ export async function getImageFromDevice(images) {
 
   let formData = new FormData();
   formData.append("image", { uri: localUri, name: filename, type });
-  const arrayBuffer = await fs.readAsStringAsync(localUri);
+  const arrayBuffer = await fs.readAsStringAsync(localUri, {
+    encoding: fs.EncodingType.Base64,
+  });
   const arrayBuffer1 = base64.decode(arrayBuffer);
 
   //const arrayBuffer = decode(base64);
   const file = {
     type: type,
     fileName: filename,
-    payload: arrayBuffer,
+    payload: arrayBuffer1,
   };
 
   return file;
