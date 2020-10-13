@@ -10,11 +10,15 @@ const headers = { headers: { Authorization: `Bearer ${token}` } };
 const payload = { key: "value" };
 
 export async function loadFeed() {
-  console.log(AINGURA_API.API_URL + AINGURA_API.FEED_ENDPOINT);
+  const token = authStore.getToken();
+  const headers = { headers: { Authorization: `Bearer ${token}` } };
+  const payload = { key: "value" };
+
   return axios
     .post(AINGURA_API.API_URL + AINGURA_API.FEED_ENDPOINT, payload, headers)
     .then((ainguraData) => {
       if (ainguraData) {
+        console.log(ainguraData);
         dispatcher.dispatch({
           type: actionTypes.LOAD_FEED,
           data: ainguraData.data,
@@ -22,6 +26,7 @@ export async function loadFeed() {
       }
     })
     .catch((error) => {
+      console.log(error);
       throw error;
     });
 }

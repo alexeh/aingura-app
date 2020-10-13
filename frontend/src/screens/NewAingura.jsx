@@ -24,6 +24,7 @@ import {
   takePicture,
   getImageFromDevice,
   uploadImageAndGetPublicationURI,
+  uploadImageOnS3
 } from "../_helpers/utils";
 import authStore from "../stores/authStore";
 
@@ -61,7 +62,8 @@ export default function NewAingura(props) {
       setMessage(validation.data.message);
     } else {
       const imageToUpload = getImageFromDevice(images);
-      await uploadImageAndGetPublicationURI(imageToUpload)
+     await uploadImageOnS3(imageToUpload)
+     /*  await uploadImageAndGetPublicationURI(imageToUpload)
         .then((res) => {
           setUploadImage(res.data.data.link);
           uri = res.data.data.link;
@@ -76,7 +78,7 @@ export default function NewAingura(props) {
         author: userInfo.username,
       };
       await createAingura(newAingura);
-      setMessage(AINGURA_CREATED);
+      setMessage(AINGURA_CREATED); */
     }
   }
 

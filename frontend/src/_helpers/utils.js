@@ -13,9 +13,12 @@ export function validatePasswordAtRegister(password, confirmPassword) {
 
 export async function takePicture(Permissions, imageStateSetter, picker) {
   await Permissions.askAsync(Permissions.CAMERA);
-  const { cancelled, uri } = await picker.launchCameraAsync({
+  const image = await picker.launchCameraAsync({
     allowsEditing: false,
   });
+  console.log("ESTO ES IMAGEEEEEEEEEWWWWWWWWWWWWWWWWWWWWW");
+  console.log(image);
+  const { cancelled, uri } = image;
   imageStateSetter({ image: uri });
 }
 
@@ -72,19 +75,22 @@ export async function uploadImageOnS3(file) {
     signatureVersion: "v4",
   });
   s3bucket.createBucket(() => {
+    let contentType = "multipart/form-data";
+    let contentDeposition = 'inline;filename="' + "filename TEST1" + '"';
+
     const params = {
       Bucket: "aingura-imgs",
-      Key: "test",
+      Key: "test1",
       Body: file,
       ContentDisposition: contentDeposition,
       ContentType: contentType,
     };
     s3bucket.upload(params, (err, data) => {
       if (err) {
-        console.log("error in callback");
+        console.log("error in callback " + err);
       }
       console.log("success");
-      console.log("Respomse URL : " + data.Location);
+      console.log("Respomse URL : " + data);
     });
   });
 }
