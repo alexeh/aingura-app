@@ -54,15 +54,17 @@ export default function NewAingura(props) {
   async function startPostingProcess(e) {
     let uri = null;
     e.preventDefault();
-    console.log(geoLocation);
+   
     const validation = await validateGeoLocation(geoLocation);
-    console.log(validation);
+    
     if (validation.data.message) {
       console.log("NO SE VALIDA");
       setMessage(validation.data.message);
     } else {
-      const imageToUpload = getImageFromDevice(images);
-     await uploadImageOnS3(imageToUpload)
+      const imageToUpload = await getImageFromDevice(images);
+      
+      const answer = await uploadImageOnS3(imageToUpload)
+      console.log(answer)
      /*  await uploadImageAndGetPublicationURI(imageToUpload)
         .then((res) => {
           setUploadImage(res.data.data.link);

@@ -3,6 +3,9 @@ import axios from "axios";
 import { ToastAndroid } from "react-native";
 import S3 from "aws-sdk/clients/s3";
 import { Credentials } from "aws-sdk";
+import base64 from "base64-arraybuffer";
+
+import * as fs from "expo-file-system";
 
 export function validatePasswordAtRegister(password, confirmPassword) {
   if (password === confirmPassword) {
@@ -18,11 +21,11 @@ export async function takePicture(Permissions, imageStateSetter, picker) {
   });
   console.log("ESTO ES IMAGEEEEEEEEEWWWWWWWWWWWWWWWWWWWWW");
   console.log(image);
-  const { cancelled, uri } = image;
-  imageStateSetter({ image: uri });
+
+  imageStateSetter({ image: image.uri });
 }
 
-export function getImageFromDevice(images) {
+export async function getImageFromDevice(images) {
   let localUri = images.image;
   let filename = localUri.split("/").pop();
   let match = /\.(\w+)$/.exec(filename);
@@ -30,8 +33,45 @@ export function getImageFromDevice(images) {
 
   let formData = new FormData();
   formData.append("image", { uri: localUri, name: filename, type });
+  const arrayBuffer = await fs.readAsStringAsync(localUri);
+  const arrayBuffer1 = base64.decode(arrayBuffer);
 
-  return formData;
+  //const arrayBuffer = decode(base64);
+  const file = {
+    type: type,
+    fileName: filename,
+    payload: arrayBuffer,
+  };
+
+  return file;
+}
+export async function uploadImageOnS3(file) {
+  const s3bucket = new S3({
+    accessKeyId: "AKIAWLI27SCGJ34FAJUQ",
+    secretAccessKey: "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",
+    Bucket: "aingura-imgs",
+    signatureVersion: "v4",
+  });
+  s3bucket.createBucket(() => {
+    let contentDeposition = 'inline;filename="' + file.fileName + '"';
+
+    const params = {
+      Bucket: "aingura-imgs",
+      Key: file.fileName,
+      Body: file.payload,
+      ContentDisposition: contentDeposition,
+      ContentType: file.type,
+    };
+    console.log("ESTO ES LO QUE COME S3");
+    console.log(params);
+    s3bucket.upload(params, (err, data) => {
+      if (err) {
+        console.log("error in callback " + err);
+      }
+      console.log("success");
+      console.log(data);
+    });
+  });
 }
 
 export async function uploadImageAndGetPublicationURI(imageData) {
@@ -65,34 +105,6 @@ export function userAlreadyBeenInAingura(visitedArray, username) {
 
 export function showToast(messageToShow) {
   return ToastAndroid.show(messageToShow, ToastAndroid.SHORT);
-}
-
-export async function uploadImageOnS3(file) {
-  const s3bucket = new S3({
-    accessKeyId: "AKIAWLI27SCGA4RTS7VJ",
-    secretAccessKey: "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",
-    Bucket: "aingura-imgs",
-    signatureVersion: "v4",
-  });
-  s3bucket.createBucket(() => {
-    let contentType = "multipart/form-data";
-    let contentDeposition = 'inline;filename="' + "filename TEST1" + '"';
-
-    const params = {
-      Bucket: "aingura-imgs",
-      Key: "test1",
-      Body: file,
-      ContentDisposition: contentDeposition,
-      ContentType: contentType,
-    };
-    s3bucket.upload(params, (err, data) => {
-      if (err) {
-        console.log("error in callback " + err);
-      }
-      console.log("success");
-      console.log("Respomse URL : " + data);
-    });
-  });
 }
 
 //export function constructObjectToBackend(ainguraName, ainguraDesc, ainguraApproxLocation, geolocation, userInfo, )
