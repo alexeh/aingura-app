@@ -37,8 +37,6 @@ export async function getImageFromDevice(images) {
     encoding: fs.EncodingType.Base64,
   });
   const arrayBuffer1 = base64.decode(arrayBuffer);
-
-  //const arrayBuffer = decode(base64);
   const file = {
     type: type,
     fileName: filename,
@@ -48,32 +46,35 @@ export async function getImageFromDevice(images) {
   return file;
 }
 export async function uploadImageOnS3(file) {
+  let dataObject;
   const s3bucket = new S3({
     accessKeyId: "AKIAWLI27SCGJ34FAJUQ",
     secretAccessKey: "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",
     Bucket: "aingura-imgs",
     signatureVersion: "v4",
   });
-  s3bucket.createBucket(() => {
-    let contentDeposition = 'inline;filename="' + file.fileName + '"';
+  let contentDeposition = 'inline;filename="' + file.fileName + '"';
 
-    const params = {
-      Bucket: "aingura-imgs",
-      Key: file.fileName,
-      Body: file.payload,
-      ContentDisposition: contentDeposition,
-      ContentType: file.type,
-    };
-    console.log("ESTO ES LO QUE COME S3");
-    console.log(params);
-    s3bucket.upload(params, (err, data) => {
+  console.log("THIS IS PARAMASSSSSSSS");
+  // await s3bucket.createBucket().promise();
+  const params = {
+    Bucket: "aingura-imgs",
+    Key: file.fileName,
+    Body: file.payload,
+    // ContentDisposition: contentDeposition,
+    //ContentType: file.type,
+  };
+  console.log(params);
+  const data = await s3bucket
+    .upload(params, (err, data) => {
       if (err) {
-        console.log("error in callback " + err);
+        console.log(err);
       }
-      console.log("success");
       console.log(data);
-    });
-  });
+    })
+    .promise()
+    .catch((err) => console.log(err));
+  return data;
 }
 
 export async function uploadImageAndGetPublicationURI(imageData) {

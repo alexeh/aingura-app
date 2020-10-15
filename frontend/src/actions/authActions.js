@@ -5,7 +5,7 @@ import enviroment from "../enviromentConf";
 
 export async function createNewUser(newUserParams) {
   return axios
-    .post("http://192.168.1.132:4200/login/register", newUserParams)
+    .post("http://192.168.1.130:4200/login/register", newUserParams)
     .then((message) => {
       if (message.data.message.message) {
         dispatcher.dispatch({
@@ -26,7 +26,7 @@ export async function createNewUser(newUserParams) {
 
 export async function loginUser(userParams) {
   return axios
-    .post("http://192.168.1.132:4200/login/", userParams)
+    .post("http://192.168.1.130:4200/login/", userParams)
     .then((user) => {
       dispatcher.dispatch({
         type: actionTypes.LOGIN_USER,

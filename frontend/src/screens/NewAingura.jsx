@@ -54,6 +54,7 @@ export default function NewAingura(props) {
   async function startPostingProcess(e) {
     let uri = null;
     e.preventDefault();
+    let location 
    
     const validation = await validateGeoLocation(geoLocation);
     
@@ -62,25 +63,19 @@ export default function NewAingura(props) {
       setMessage(validation.data.message);
     } else {
       const imageToUpload = await getImageFromDevice(images);
-      
-      const answer = await uploadImageOnS3(imageToUpload)
-      console.log(answer)
-     /*  await uploadImageAndGetPublicationURI(imageToUpload)
-        .then((res) => {
-          setUploadImage(res.data.data.link);
-          uri = res.data.data.link;
-        })
-        .catch((err) => console.log(err));
+     const location = await uploadImageOnS3(imageToUpload)
       const newAingura = {
         ainguraName,
         ainguraDesc,
         ainguraApproxLocation,
         geoLocation,
-        uploadImage: uri,
+        uploadImage: location.Location,
         author: userInfo.username,
       };
-      await createAingura(newAingura);
-      setMessage(AINGURA_CREATED); */
+      console.log(newAingura)
+     await createAingura(newAingura);
+      setMessage(AINGURA_CREATED);  
+
     }
   }
 

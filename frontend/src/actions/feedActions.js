@@ -33,7 +33,7 @@ export async function loadFeed() {
 
 export async function loadAinguraById(id) {
   return axios
-    .get(`http://192.168.1.132:4200/api/${id}`, payload, headers)
+    .get(`http://192.168.1.130:4200/api/${id}`, payload, headers)
     .then((ainguraData) => {
       if (ainguraData) {
         dispatcher.dispatch({
@@ -48,6 +48,7 @@ export async function loadAinguraById(id) {
 }
 
 export async function createAingura(ainguraParams) {
+  console.log("ENTERING CREATE AINGURA CALL");
   return axios
     .post(AINGURA_API.API_URL + AINGURA_API.CREATE_ENDPOINT, ainguraParams)
     .catch((err) => {
