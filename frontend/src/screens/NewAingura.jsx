@@ -24,6 +24,7 @@ import {
   takePicture,
   getImageFromDevice,
   uploadImageAndGetPublicationURI,
+  uploadImageOnS3
 } from "../_helpers/utils";
 import authStore from "../stores/authStore";
 
@@ -53,30 +54,28 @@ export default function NewAingura(props) {
   async function startPostingProcess(e) {
     let uri = null;
     e.preventDefault();
-    console.log(geoLocation);
+    let location 
+   
     const validation = await validateGeoLocation(geoLocation);
-    console.log(validation);
+    
     if (validation.data.message) {
       console.log("NO SE VALIDA");
       setMessage(validation.data.message);
     } else {
-      const imageToUpload = getImageFromDevice(images);
-      await uploadImageAndGetPublicationURI(imageToUpload)
-        .then((res) => {
-          setUploadImage(res.data.data.link);
-          uri = res.data.data.link;
-        })
-        .catch((err) => console.log(err));
+      const imageToUpload = await getImageFromDevice(images);
+     const location = await uploadImageOnS3(imageToUpload)
       const newAingura = {
         ainguraName,
         ainguraDesc,
         ainguraApproxLocation,
         geoLocation,
-        uploadImage: uri,
+        uploadImage: location.Location,
         author: userInfo.username,
       };
-      await createAingura(newAingura);
-      setMessage(AINGURA_CREATED);
+      console.log(newAingura)
+     await createAingura(newAingura);
+      setMessage(AINGURA_CREATED);  
+
     }
   }
 
