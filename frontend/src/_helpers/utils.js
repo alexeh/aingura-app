@@ -48,8 +48,8 @@ export async function getImageFromDevice(images) {
 export async function uploadImageOnS3(file) {
   let dataObject;
   const s3bucket = new S3({
-    accessKeyId: "AKIAWLI27SCGJ34FAJUQ",
-    secretAccessKey: "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",
+    accessKeyId: "",
+    secretAccessKey: "",
     Bucket: "aingura-imgs",
     signatureVersion: "v4",
   });
